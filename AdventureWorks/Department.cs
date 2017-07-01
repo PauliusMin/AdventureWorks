@@ -11,12 +11,18 @@ namespace AdventureWorks
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Department
     {
         public short DepartmentID { get; set; }
+        [Required(ErrorMessage = "Please enter the name.")]
+        [StringLength(50, ErrorMessage = "The name must be less than {1} characters.")]
         public string Name { get; set; }
+        [Required(ErrorMessage = "Please enter the group name.")]
+        [StringLength(50, ErrorMessage = "The group name must be less than {1} characters.")]
         public string GroupName { get; set; }
+        [Required(ErrorMessage = "Please enter the modified date.")]
         public System.DateTime ModifiedDate { get; set; }
     }
 }

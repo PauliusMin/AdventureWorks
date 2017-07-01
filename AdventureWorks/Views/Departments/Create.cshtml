@@ -28,6 +28,14 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.GroupName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.GroupName, "", new { @class = "text-danger" })
+                <p>Suggestions:</p>
+                <select id="groupNameSuggestions" class="form-control">
+                    <option />
+                    @foreach (var groupName in ViewBag.EgzistingGroups)
+                    {
+                        <option>@groupName</option>
+                    }
+                </select>
             </div>
         </div>
 
@@ -53,4 +61,10 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="/Scripts/CreateEditDepartmentScripts.js"></script>
+
+    <link rel="stylesheet" href="/Content/bootstrap-datepicker.min.css" />
+    <link rel="stylesheet" href="/Content/bootstrap-datepicker3.min.css" />
+    <script type="text/javascript" src="/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Scripts/bootstrap-datepicker.js"></script>
 }

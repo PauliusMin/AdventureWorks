@@ -16,7 +16,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Name) 
         </dd>
 
         <dt>
@@ -43,6 +43,10 @@
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
             @Html.ActionLink("Back to List", "Index")
+            <br>
+            <p class="alert">
+                @ViewBag.Msg
+            </p>
         </div>
     }
 </div>

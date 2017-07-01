@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AdventureWorks;
+using System.Data.Entity.Infrastructure;
 
 namespace AdventureWorks.Models
 {
@@ -39,6 +40,7 @@ namespace AdventureWorks.Models
         // GET: Departments/Create
         public ActionResult Create()
         {
+            SetEgzistingGroups();
             return View();
         }
 
@@ -55,7 +57,7 @@ namespace AdventureWorks.Models
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-
+            SetEgzistingGroups();
             return View(department);
         }
 
@@ -71,7 +73,19 @@ namespace AdventureWorks.Models
             {
                 return HttpNotFound();
             }
+            SetEgzistingGroups();
+
             return View(department);
+        }
+
+        private void SetEgzistingGroups()
+        {
+            var egzistingGroupNames = db.Departments.GroupBy(x => x.GroupName)
+                                            .Select(x => x.FirstOrDefault())
+                                            .ToList();
+
+            List<string> disctinctGroupNames = egzistingGroupNames.Select(x => x.GroupName).ToList();
+            ViewBag.EgzistingGroups = disctinctGroupNames;
         }
 
         // POST: Departments/Edit/5
@@ -87,6 +101,7 @@ namespace AdventureWorks.Models
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            SetEgzistingGroups();
             return View(department);
         }
 
@@ -111,9 +126,19 @@ namespace AdventureWorks.Models
         public async Task<ActionResult> DeleteConfirmed(short id)
         {
             Department department = await db.Departments.FindAsync(id);
-            db.Departments.Remove(department);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            try
+            {
+                db.Entry(department).State = EntityState.Deleted;
+                await db.SaveChangesAsync();
+                //db.Departments.Remove(department);
+                //await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }            
+            catch (DataException)
+            {
+                ViewBag.Msg = "Can't delete";                                
+                return View(department);
+            }
         }
 
         protected override void Dispose(bool disposing)
